@@ -2,7 +2,7 @@
 
 //usamos mongoose como orm
 var mongoose = require('mongoose');
-var schema = mongoose.Schema;
+var Schema = mongoose.Schema;
 
 var animalSchema = Schema({
 	name: String,
