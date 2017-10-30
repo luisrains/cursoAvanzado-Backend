@@ -4,10 +4,13 @@ var bcrypt = require('bcrypt-nodejs');
 //modelos
 var User = require('../models/user');
 
+//service
+var jwt = require('../service/jwt');
 //acciones
 function pruebas(req, res){
 	res.status(200).send({
-			message: 'Probando el controlador de usuarios'
+			message: 'Probando el controlador de usuarios',
+			usuario: req.user
 	});
 }
 
@@ -69,7 +72,14 @@ function login(req, res){
 
 				bcrypt.compare(password,userf.password, (error,check)=>{
 					if(check){
-						res.status(200).send({userf});
+						if(params.gettoken){
+							res.status(200).send({
+								token: jwt.createToken(userf)
+							});
+						}else{
+							res.status(200).send({userf});
+						}
+						
 					}else{
 						res.status(404).send({message: "El usuario no ha podido loguearse correctamente"});
 					}
@@ -83,10 +93,29 @@ function login(req, res){
 
 }
 
+function updateUser(req,res){
+	var userId = req.params.id;
+	var update = req.body;
 
+	if(userId != req.user.sub){
+		res.status(500).send({message: "No tienes permisos para actualizar el user"});
+	}
+	User.findByIdAndUpdate(userId,update,(err, userUpdated)=>{
+		if(err){
+			res.status(500).send({message: "Error al actualizar usuario"});
+		}else{
+			if(!userUpdated){
+				res.status(404).send({message: "No se ha podido actulizar el usuario"});
+			}else{
+				res.status(200).send({message: "El usuario se ha actualizado correctamente", usuario: userUpdated});
+			}
+		}
+	});
+}
 
 module.exports = {
 	pruebas,
 	saveUser,
-	login
+	login,
+	updateUser
 };
