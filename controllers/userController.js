@@ -1,6 +1,7 @@
 'use strict'
 var bcrypt = require('bcrypt-nodejs');
-
+var fs = require('fs');
+var pathFileComputer = require('path');
 //modelos
 var User = require('../models/user');
 
@@ -113,9 +114,63 @@ function updateUser(req,res){
 	});
 }
 
+function uploadImageUser(req,res){
+	var userId = req.params.id;
+	var file_name = "No subido..";
+	if(req.files){
+		var file_path = req.files.image.path;
+		var file_split = file_path.split('/');
+		var file_name = file_split[2];
+		var extension_split = file_name.split('\.');
+		var file_ext = extension_split[1];
+		if(file_ext == 'jpg' || file_ext == 'jpeg'){
+			if(userId != req.user.sub){
+				res.status(500).send({message: "No tienes permisos para actualizar el user"});
+			}
+
+			User.findByIdAndUpdate(userId,{image:file_name},{new:true},(err, userUpdated)=>{
+				if(err){
+					res.status(500).send({message: "Error al actualizar usuario"});
+				}else{
+					if(!userUpdated){
+						res.status(404).send({message: "No se ha podido actulizar el usuario"});
+					}else{
+						res.status(200).send({message: "El usuario se ha actualizado correctamente", usuario: userUpdated, image:file_name});
+					}
+				}
+			});
+		}else{
+			fs.unlink(file_path,(err)=>{
+				if(err){
+					res.status(200).send({message:'Extension no valida pero no eliminado'});
+				}else{
+					res.status(200).send({message:'Fichero eliminado'});
+				}
+
+			});
+		}
+
+	}
+}
+
+function getImageFile(req, res){
+	var imageFile = req.params.imageFile;
+	var pathFile = './uploads/users/'+imageFile;
+	fs.exists(pathFile, function(exists){
+		if(exists){
+			res.sendFile(pathFileComputer.resolve(pathFile));
+		}else{
+			res.status(404).send({message:'La imagen no existe'});
+		}
+	});
+	//res.status(404).send({message:'La imagen no existe d'});
+
+}
 module.exports = {
 	pruebas,
 	saveUser,
 	login,
-	updateUser
+	updateUser,
+	uploadImageUser,
+	getImageFile
 };
