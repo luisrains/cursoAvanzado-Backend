@@ -166,11 +166,28 @@ function getImageFile(req, res){
 	//res.status(404).send({message:'La imagen no existe d'});
 
 }
+
+function getKeepers(req,res){
+	//es un where lo que esta dento del {}
+	User.find({role:'ROLE_ADMIN'}).exec((err,users)=>{
+		if(err){
+			res.status(500).send({message:'Error en la peticion'});
+		}else{
+			if(!users){
+				res.status(404).send({message:'No hay cuidadores'});
+			}else{
+				res.status(200).send({usuarios: users});
+			}
+		}
+
+	});
+}
 module.exports = {
 	pruebas,
 	saveUser,
 	login,
 	updateUser,
 	uploadImageUser,
-	getImageFile
+	getImageFile,
+	getKeepers
 };

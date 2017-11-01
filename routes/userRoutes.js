@@ -14,4 +14,5 @@ api.post('/login', userController.login);
 api.put('/update-user/:id', md_auth.ensureAuth, userController.updateUser);
 api.post('/upload-image-user/:id', [md_auth.ensureAuth, md_upload], userController.uploadImageUser);
 api.get('/get-image-file/:imageFile', userController.getImageFile);
+api.get('/keepers/', userController.getKeepers);
 module.exports = api;
