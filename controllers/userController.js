@@ -63,14 +63,12 @@ function login(req, res){
 	var params = req.body;
 	var email = params.email;
 	var password = params.password;
-	
-	User.findOne({email:email.toLowerCase()}, (err, userf)=>{
 
+	User.findOne({email:email.toLowerCase()}, (err, userf)=>{
 		if(err){
 			res.status(500).send({message: "Error al comprobar el usuario"});
 		}else{
 			if(userf){
-
 				bcrypt.compare(password,userf.password, (error,check)=>{
 					if(check){
 						if(params.gettoken){
