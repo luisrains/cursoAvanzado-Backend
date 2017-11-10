@@ -11,7 +11,7 @@ var jwt = require('../service/jwt');
 function pruebas(req, res){
 	res.status(200).send({
 			message: 'Probando el controlador de usuarios',
-			usuario: req.user
+			user: req.user
 	});
 }
 
@@ -100,13 +100,18 @@ function updateUser(req,res){
 		res.status(500).send({message: "No tienes permisos para actualizar el user"});
 	}
 	User.findByIdAndUpdate(userId,update,(err, userUpdated)=>{
+		console.log('user->',userUpdated);
 		if(err){
+			console.log('error->500');
 			res.status(500).send({message: "Error al actualizar usuario"});
 		}else{
+
 			if(!userUpdated){
+				console.log('404->');
 				res.status(404).send({message: "No se ha podido actulizar el usuario"});
 			}else{
-				res.status(200).send({message: "El usuario se ha actualizado correctamente", usuario: userUpdated});
+				console.log('200->');
+				res.status(200).send({message: "El usuario se ha actualizado correctamente", user: userUpdated});
 			}
 		}
 	});
@@ -133,7 +138,7 @@ function uploadImageUser(req,res){
 					if(!userUpdated){
 						res.status(404).send({message: "No se ha podido actulizar el usuario"});
 					}else{
-						res.status(200).send({message: "El usuario se ha actualizado correctamente", usuario: userUpdated, image:file_name});
+						res.status(200).send({message: "El usuario se ha actualizado correctamente", user: userUpdated, image:file_name});
 					}
 				}
 			});
@@ -174,7 +179,7 @@ function getKeepers(req,res){
 			if(!users){
 				res.status(404).send({message:'No hay cuidadores'});
 			}else{
-				res.status(200).send({usuarios: users});
+				res.status(200).send({users: users});
 			}
 		}
 
