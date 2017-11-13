@@ -95,6 +95,8 @@ function login(req, res){
 function updateUser(req,res){
 	var userId = req.params.id;
 	var update = req.body;
+	//para que no actualice la contraseña desde editar mis datos
+	delete update.password;
 
 	if(userId != req.user.sub){
 		res.status(500).send({message: "No tienes permisos para actualizar el user"});
