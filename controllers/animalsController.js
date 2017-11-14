@@ -103,7 +103,7 @@ function uploadImageAnimal(req,res){
 		var extension_split = file_name.split('\.');
 		var file_ext = extension_split[1];
 
-		if(file_ext == 'jpg' || file_ext == 'jpeg'){
+		if(file_ext == 'jpg' || file_ext == 'jpeg' || file_ext == 'png' || file_ext == 'JPG' || file_ext == 'JPEG'){
 
 			Animal.findByIdAndUpdate(animalId,{image:file_name},{new:true},(err, animalUpdated)=>{
 				if(err){
