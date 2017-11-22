@@ -40,7 +40,7 @@ function saveUser(req, res){
 								res.status(500).send({message: "Error al guardar el usuario"});
 							}else{
 								if(!userStored){
-									res.status(404).send({message: "No se ha registrado el usuario"});	
+									res.status(404).send({message: "No se ha registrado el usuario"});
 								}else{
 									res.status(200).send({user: userStored});
 								}
@@ -53,7 +53,7 @@ function saveUser(req, res){
 			}
 		});
 
-		
+
 	}else{
 		res.status(200).send({message: "Introduzca los datos correctamente"});
 	}
@@ -78,7 +78,7 @@ function login(req, res){
 						}else{
 							res.status(200).send({userf});
 						}
-						
+
 					}else{
 						res.status(404).send({message: "El usuario no ha podido loguearse correctamente"});
 					}
@@ -128,7 +128,7 @@ function uploadImageUser(req,res){
 		var file_name = file_split[2];
 		var extension_split = file_name.split('\.');
 		var file_ext = extension_split[1];
-		if(file_ext == 'jpg' || file_ext == 'jpeg'){
+		if(file_ext == 'jpg' || file_ext == 'jpeg' || file_ext == 'png' || file_ext == 'PNG' || file_ext == 'JPG' || file_ext == 'JPEG'){
 			if(userId != req.user.sub){
 				res.status(500).send({message: "No tienes permisos para actualizar el user"});
 			}
